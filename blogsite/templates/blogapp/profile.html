@@ -1,0 +1,70 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% load custom_filters %} 
+{% block css %} 
+<link rel="stylesheet" href="{% static '/style/profile.css' %}"> 
+{% endblock %} 
+
+{% block style %} 
+<style>
+    .card-body img {
+    max-width: 100%;
+}
+.home-user{
+    text-decoration: none;
+    color: white;
+    margin-bottom: 0;
+}
+</style>
+{% endblock %} 
+
+{% block content %} 
+{% include 'nav.html' %} 
+
+<div class="container">
+    <div class="card card-body mt-3 w-50 mx-auto  profile-card">
+        <div class="profile-img">
+            <img src="/{{profile.profile_pic}}" alt="">
+        </div>
+        <div class="profile-info">
+            <h3>{{profile.user.first_name}}&nbsp;{{profile.user.last_name}}</h3>
+            <p>{{profile.bio}}</p>
+            {% if request.user == user %} 
+            <a href="" class="btn btn-dark">Update Profile</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+<div class="create-post m-auto text-center w-25">
+    <a href="{% url 'create_post' %}" class="btn btn-dark mt-3 w-100 ">Cerate New Post <i class="fa-solid fa-circle-plus ml-4"></i></a>
+</div>
+
+<br>
+{% for i in post %} 
+<div class="card w-50 mx-auto bg-dark text-white">
+    <div class="card-header">
+         <a class="home-user" href="{% url 'profile' i.user.id %}"><h5>@{{i.user.first_name}}&nbsp;{{i.user.last_name}}</h5></a>
+        <p>{{i.create_at}}</p>
+    </div>
+
+    <div class="card-body">
+        <img src="/{{i.image}}" class="d-flex mx-auto" alt="">
+        <div class="card-title">
+            <h3>{{i.title}}</h3> <hr>
+        </div>
+        <p>
+            {{i.desc|range_filter|linebreaks}}<a href="{% url 'post_view' i.id %}" class="btn btn-sm btn-warning">read more</a>
+        </p>
+       
+    </div>
+    <div class="card-footer">
+
+    </div>
+</div>
+<br>
+{% endfor %}
+
+{% endblock %}

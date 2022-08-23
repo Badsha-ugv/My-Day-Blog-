@@ -1,0 +1,20 @@
+{% extends 'base.html' %} 
+
+{% block content %} 
+{% include 'nav.html' %} 
+
+<div class="container">
+
+    <div class="post-body w-75 mx-auto bg-light m-3 p-3 " style="border-radius:5px;">
+        <a href="/" class="btn btn-sm btn-dark"><i class="fa-solid fa-arrow-left mr-2"></i>back</a>
+        <h3 class="p-3">{{post.title}}</h3> <hr>
+        <img src="/{{post.image}}" class=" d-flex img-fluid mx-auto" alt="">
+        <em>{{post.create_at}}</em>
+        <span>by @{{post.user.username}}</span>
+        <br> <hr>
+        <p class="p-3">{{post.desc|linebreaks}}</p>
+    </div>
+    
+</div>
+
+{% endblock %} 
