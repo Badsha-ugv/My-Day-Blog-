@@ -11,18 +11,32 @@
     color: white;
     margin-bottom: 0;
 }
+.pagination {
+    color: white;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+.pagination a {
+    color: wheat;
+    font-size: 18px;
+    font-weight: 400;
+    word-spacing: 2px !important;
+    text-decoration: none;
+    margin-left: 5px;
+}
 </style>
 {% endblock %} 
 {% block content %} 
 
 {% include 'nav.html' %}
 
-<div class="create-post m-auto text-center w-25">
+<div class="create-post m-auto text-center w-25 clear-fix">
     <a href="{% url 'create_post' %}" class="btn btn-dark mt-3 w-100 ">Cerate New Post <i class="fa-solid fa-circle-plus ml-4"></i></a>
 </div>
 
 <br>
-{% for i in post %} 
+{% for i in page_obj %} 
 <div class="card w-50 mx-auto bg-dark text-white">
     <div class="card-header">
          <a class="home-user" href="{% url 'profile' i.user.id  %}"><h5>@{{i.user.first_name}}&nbsp;{{i.user.last_name}}</h5></a>
@@ -46,4 +60,23 @@
 <br>
 
 {% endfor %} 
+
+<hr>
+<div class="pagination">
+    <span class="step-links ">
+        {% if page_obj.has_previous %}
+            <a  href="?page=1" >&laquo; first</a>
+            <a   href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a   href="?page={{ page_obj.next_page_number }}">next</a>
+            <a   href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 {% endblock %}

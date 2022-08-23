@@ -51,9 +51,12 @@
     <div class="card-header">
 
         <a class="home-user" href="{% url 'profile' i.user.id %}"><h5>@{{i.user.first_name}}&nbsp;{{i.user.last_name}}</h5></a>
+        
+
         {% if request.user == user %} 
-        <a href="" class="del float-right"><i class="fa-solid fa-trash"></i></a>
+        <a href="{% url 'delete_post' i.id %}" class="btn btn-danger btn-sm float-right"><i class="fa-solid fa-trash"></i></a>       
         {% endif %} 
+
         <p>{{i.create_at}}</p>
     </div>
 
@@ -73,5 +76,4 @@
 </div>
 <br>
 {% endfor %}
-
 {% endblock %}

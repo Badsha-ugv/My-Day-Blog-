@@ -4,15 +4,19 @@ from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import  login_required
 
+from django.core.paginator import Paginator
+
 from .models import Post,BlogUser
 # Create your views here.
 
 def home(request):
     post = Post.objects.all().order_by('-id') 
-
-    
+    paginator = Paginator(post, 2)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
         'post':post,
+        'page_obj':page_obj 
     }
     return render(request,'blogapp/home.html',context)  
 
@@ -37,6 +41,9 @@ def register(request):
         
         messages.success(request,'Registration Successful!') 
         return redirect('login') 
+    
+
+
 
     return render(request,'auth/register.html') 
 
@@ -132,3 +139,8 @@ def post_view(request,id):
         'post':post
     }
     return render(request,'blogapp/post_view.html',context)  
+
+def delete_post(request,id):
+    post = Post.objects.get(id=id) 
+    post.delete() 
+    return redirect('/') 
