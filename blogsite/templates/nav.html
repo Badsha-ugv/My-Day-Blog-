@@ -21,9 +21,12 @@
 
     <div class="author">
         {% if user.is_authenticated %} 
-        <em > <a href="{% url 'profile' user.id %}"  class="" style="color:skyblue;text-decoration:none;">
+        {% if request.user == user %} 
+        <em > 
+          <a href="{% url 'profile' request.user.id %}"  class="" style="color:skyblue;text-decoration:none;">
             @{{user.username}}
         </a></em>
+        {% endif %}
         <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket text-white ml-3"></i></a>
         {% else %} 
         <small><a class="btn btn-sm btn-primary" href="{% url 'register' %} ">Register</a></small> 

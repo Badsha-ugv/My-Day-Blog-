@@ -13,6 +13,7 @@ urlpatterns = [
     path('create_post/',views.create_post,name='create_post'),
 
     path('post_view/<str:id>/',views.post_view,name='post_view'),
+    path('profile/update_profile/<str:id>/',views.update_profile,name='update_profile'),
     
 
 ]

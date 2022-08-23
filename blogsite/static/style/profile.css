@@ -16,6 +16,7 @@
 .profile-card{
     height: 250px;
     margin-top: 50px !important;
+    background:#d3edfff7;
 }
 
 .profile-info h3 {
@@ -39,4 +40,16 @@
 .profile-info a {
     position: absolute;
     top: 62%;
+}
+
+.home-user {
+    text-decoration: none;
+    color: white;
+    margin-bottom: 0;
+    display: flex;
+}
+
+a.del {
+    color: #db2626;
+    font-size: 15px;
 }

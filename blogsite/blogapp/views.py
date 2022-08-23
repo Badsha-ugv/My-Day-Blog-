@@ -2,16 +2,15 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import  login_required
 
-from .models import Post,Profile 
+from .models import Post,BlogUser
 # Create your views here.
 
 def home(request):
     post = Post.objects.all().order_by('-id') 
 
-    for i in post:
-        img = i.image 
-        print(img) 
+    
     context = {
         'post':post,
     }
@@ -22,15 +21,16 @@ def register(request):
         username = request.POST.get('username') 
         email = request.POST.get('email') 
         password = request.POST.get('password') 
+        
 
-        if User.objects.filter(username=username).exists:
+        if BlogUser.objects.filter(username=username).exists():
             messages.error(request,'Username already taken !')
             return redirect('register')
 
-        user = User(
+        user = BlogUser(
             username=username,
             email=email,
-            
+           
         )
         user.set_password(password) 
         user.save()
@@ -55,27 +55,57 @@ def user_login(request):
             return redirect('login') 
     return render(request,'auth/login.html') 
 
+
 def user_logout(request):
     logout(request) 
     return redirect('home') 
 
+
 def profile(request,id):
-    
-    profile = Profile.objects.get(user=id) 
+    post = Post.objects.filter(user=id)
+    user = BlogUser.objects.get(id=id) 
 
-    print(id)  
-    print(profile) 
-
-    post = Post.objects.filter(user=id).order_by('-id') 
-
-    print(post) 
     context = {
-        'profile':profile, 
-        'post':post,
+        'user':user,
+        'post':post
     }
-    return render(request,'blogapp/profile.html',context) 
+    return render(request,'blogapp/profile.html',context)  
 
+@login_required(login_url='login')
+def update_profile(request,id):
+    user = BlogUser.objects.get(id=id) 
 
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        password = request.POST.get('password')
+        email = request.POST.get('email')
+        bio = request.POST.get('bio')
+        profile = request.FILES.get('profile') 
+
+        user.username = username
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email 
+        user.profile_pic = profile 
+        user.bio = bio 
+
+        if password != None and password != "":
+                user.set_password(password)
+        if profile != None and profile != "":
+            user.profile_pic = profile
+
+        user.save() 
+        messages.success(request,'Profile Update Successfully!') 
+        return redirect('home') 
+
+    context = {
+        'user':user 
+    }
+    return render(request,'blogapp/update_profile.html',context)  
+
+@login_required(login_url='login')
 def create_post(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -83,7 +113,7 @@ def create_post(request):
         image = request.FILES.get('image')
 
         user_id = request.user.id 
-        user = User.objects.get(id=user_id) 
+        user = BlogUser.objects.get(id=user_id) 
         post = Post(
             user = user,
             title = title,

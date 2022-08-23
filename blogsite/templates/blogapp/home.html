@@ -25,7 +25,7 @@
 {% for i in post %} 
 <div class="card w-50 mx-auto bg-dark text-white">
     <div class="card-header">
-         <a class="home-user" href="{% url 'profile' i.user.id %}"><h5>@{{i.user.first_name}}&nbsp;{{i.user.last_name}}</h5></a>
+         <a class="home-user" href="{% url 'profile' i.user.id  %}"><h5>@{{i.user.first_name}}&nbsp;{{i.user.last_name}}</h5></a>
         <p>{{i.create_at}}</p>
     </div>
 
